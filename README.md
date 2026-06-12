@@ -1,0 +1,2 @@
+# GASIMA-STORE-
+ikiygasima 
