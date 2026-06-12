@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IKIYGASIMA STORE | Premium Dashboard</title>
+    <style>
+        /* --- CONFIGURATION & VARIABLE ROOT --- */
+        :root {
+            --primary-bg: #0d0d0d;
+            --accent-red: #ff003c;
+            --dark-red-glow: #990024;
+            --clean-white: #ffffff;
+            --muted-gray: #b3b3b3;
+            --surface-card: rgba(20, 20, 20, 0.9);
+            --border-glow: rgba(255, 0, 60, 0.4);
+        }
+
+        /* --- BASIC RESET & SMOOTHING --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--clean-white);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* --- CUSTOM PURE CSS ICONS (NO CDN DEPENDENCY) --- */
+        .icon-bars {
+            width: 22px;
+            height: 2px;
+            background: var(--clean-white);
+            position: relative;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .icon-bars::before, .icon-bars::after {
+            content: '';
+            width: 22px;
+            height: 2px;
+            background: var(--clean-white);
+            position: absolute;
+            left: 0;
+            transition: 0.3s;
+        }
+        .icon-bars::before { top: -6px; }
+        .icon-bars::after { top: 6px; }
+
+        .icon-close {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-close::before, .icon-close::after {
+            content: '';
+            position: absolute;
+            height: 2px;
+            width: 20px;
+            background: var(--clean-white);
+            top: 9px;
+            left: 0;
+        }
+        .icon-close::before { transform: rotate(45deg); }
+        .icon-close::after { transform: rotate(-45deg); }
+
+        .icon-plus, .icon-minus {
+            position: relative;
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+        }
+        .icon-plus::before, .icon-plus::after, .icon-minus::before {
+            content: '';
+            position: absolute;
+            background: currentColor;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .icon-plus::before { width: 12px; height: 2px; }
+        .icon-plus::after { width: 2px; height: 12px; }
+        .icon-minus::before { width: 12px; height: 2px; }
+
+        /* --- APPLICATION LAYERS SYSTEM --- */
+        .intro-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: var(--primary-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .intro-card {
+            background: rgba(12, 12, 12, 0.98);
+            border: 2px solid var(--accent-red);
+            padding: 45px 35px;
+            border-radius: 14px;
+            box-shadow: 0 0 35px var(--border-glow);
+            max-width: 460px;
+            width: 100%;
+            transform: scale(0.92);
+            animation: layerPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes layerPop {
+            to { transform: scale(1); }
+        }
+
+        .intro-layer h1 {
+            color: var(--clean-white);
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .intro-layer h1 span {
+            color: var(--accent-red);
+            text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
+        }
+
+        .intro-layer p {
+            color: var(--muted-gray);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        /* --- ARSITEKTUR LOADING & REGISTER ELEMENT --- */
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 18px;
+            background: #141414;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            color: var(--clean-white);
+            font-size: 1rem;
+            outline: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--accent-red);
+            box-shadow: 0 0 12px rgba(255, 0, 60, 0.3);
+        }
+
+        .store-btn {
+            background: linear-gradient(135deg, var(--accent-red), var(--dark-red-glow));
+            color: var(--clean-white);
+            border: none;
+            padding: 14px 32px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 0, 60, 0.35);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .store-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(255, 0, 60, 0.55);
+            filter: brightness(1.1);
+        }
+
+        #video-loading-layer video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 9998;
+        }
+
+        /* --- CORE APP WRAPPER WINDOW --- */
+        .app-container {
+            display: none;
+            min-height: 100vh;
+            padding-bottom: 60px;
+            background-image: linear-gradient(to bottom, rgba(13,13,13,0.85), rgba(13,13,13,0.98)), url('baigron2.jpeg');
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        header {
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 2px solid var(--accent-red);
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            backdrop-filter: blur(8px);
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .header-title span {
+            color: var(--accent-red);
+        }
+
+        .menu-toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        .menu-toggle-btn:hover {
+            background: rgba(255, 0, 60, 0.1);
+        }
+
+        .menu-toggle-btn:hover .icon-bars,
+        .menu-toggle-btn:hover .icon-bars::before,
+        .menu-toggle-btn:hover .icon-bars::after {
+            background: var(--accent-red);
+        }
+
+        /* Profile System Components */
+        .profile-container {
+            position: relative;
+            width: 100%;
+            padding: 40px 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 0, 60, 0.25);
+        }
+
+        .profile-bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .profile-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(13,13,13,0.4), rgba(13,13,13,0.95));
+            z-index: 2;
+        }
+
+        .profile-avatar {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-red);
+            object-fit: cover;
+            z-index: 3;
+            box-shadow: 0 0 20px var(--accent-red);
+            margin-bottom: 15px;
+        }
+
+        .profile-username {
+            z-index: 3;
+            font-weight: 800;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.9);
+        }
+
+        /* TYPING EFFECT ENGINE */
+        .profile-typing-desc {
+            z-index: 3;
+            font-size: 0.95rem;
+            color: var(--muted-gray);
+            font-weight: 500;
+            height: 20px;
+            text-align: center;
+            max-width: 600px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            background-color: var(--accent-red);
+            margin-left: 3px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        /* TAB NAVIGATION SYSTEM */
+        .tab-navigation {
+            display: flex;
+            background: rgba(12, 12, 12, 0.98);
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky;
+            top: 78px;
+            z-index: 98;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 12px;
+            background: none;
+            border: none;
+            color: var(--muted-gray);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-red);
+            border-bottom-color: var(--accent-red);
+            background: rgba(255, 0, 60, 0.04);
+        }
+
+        /* SHOWCASE CONTENT CONTROLLER */
+        .content-wrapper {
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: panelFadeIn 0.4s ease forwards;
+        }
+
+        @keyframes panelFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            border-left: 4px solid var(--accent-red);
+            padding-left: 12px;
+            margin: 35px 0 18px 0;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 22px;
+        }
+
+        /* NEW CARD DESIGN - INCORPORATING PRODUCT DESCRIPTIONS */
+        .product-card {
+            background-image: linear-gradient(rgba(15,15,15,0.88), rgba(12,12,12,0.97)), url('produk.jpeg');
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+        }
+
+        .product-card:hover {
+            border-color: var(--accent-red);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 0, 60, 0.15);
+        }
+
+        .product-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .product-desc {
+            font-size: 0.82rem;
+            color: var(--muted-gray);
+            line-height: 1.4;
+            margin-bottom: 16px;
+            min-height: 40px;
+        }
+
+        .product-price {
+            color: var(--accent-red);
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            background: #080808;
+            border: 1px solid #262626;
+            border-radius: 6px;
+            width: max-content;
+            margin-bottom: 16px;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            color: var(--clean-white);
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: var(--accent-red);
+            color: var(--clean-white);
+        }
+
+        .qty-number {
+            width: 45px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .menu-divider {
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-red), transparent);
+            margin: 40px 0 20px 0;
+        }
+        /* --- SIDEBAR SYSTEM (BAIGRON.JPEG BACKGROUND ONLY) --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background-image: linear-gradient(rgba(10,10,10,0.92), rgba(10,10,10,0.97)), url('baigron.jpeg');
+            background-size: cover;
+            background-position: center;
+            z-index: 1000;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.9);
+            transition: 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid var(--accent-red);
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            color: var(--clean-white);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.25s;
+            border-left: 4px solid transparent;
+            margin-bottom: 4px;
+            gap: 14px;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 0, 60, 0.1);
+            border-left-color: var(--accent-red);
+            padding-left: 28px;
+        }
+
+        .sidebar-watermark {
+            padding: 18px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #555;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            letter-spacing: 1.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(4px);
+        }
+
+        /* --- STYLING INSTRUKSI & ELEMENT DATA --- */
+        .instruction-box {
+            background: rgba(16, 16, 16, 0.95);
+            border-left: 4px solid var(--accent-red);
+            padding: 24px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .instruction-box ol {
+            padding-left: 18px;
+        }
+
+        .instruction-box li {
+            margin-bottom: 12px;
+            color: var(--muted-gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .data-card {
+            background: rgba(16, 16, 16, 0.92);
+            border: 1px solid #262626;
+            padding: 18px 22px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+        .status-pending { background: #d35400; color: #fff; }
+        .status-process { background: #2980b9; color: #fff; }
+        .status-done { background: #27ae60; color: #fff; }
+
+        .note-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: 0.2s;
+        }
+        .note-btn:hover {
+            border-color: var(--accent-red);
+            background: rgba(255, 0, 60, 0.08);
+        }
+
+        /* --- DESIGN SYSTEM MODAL POPUP --- */
+        .modal-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: #111111;
+            border: 2px solid var(--accent-red);
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            padding: 28px;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 0, 60, 0.25);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+        .modal-close:hover { background: rgba(255,0,0,0.1); }
+
+        .modal-box h2 {
+            margin-bottom: 22px;
+            text-transform: uppercase;
+            font-size: 1.35rem;
+            font-weight: 800;
+            border-bottom: 1px solid #222;
+            padding-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            color: var(--muted-gray);
+            letter-spacing: 0.5px;
+        }
+
+        .form-select, .form-textarea {
+            width: 100%;
+            background: #161616;
+            border: 1px solid #2b2b2b;
+            padding: 12px;
+            border-radius: 6px;
+            color: white;
+            outline: none;
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .form-select:focus, .form-textarea:focus { border-color: var(--accent-red); }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            background: #161616;
+            padding: 14px;
+            border-radius: 6px;
+            border: 1px solid #222;
+            margin-bottom: 18px;
+            cursor: pointer;
+        }
+        .checkbox-option input { margin-right: 14px; accent-color: var(--accent-red); transform: scale(1.2); }
+
+        .clipboard-box {
+            display: flex;
+            background: #161616;
+            border: 1px solid #2b2b2b;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .clipboard-box input { flex: 1; background: none; border: none; padding: 12px 16px; color: white; outline: none; font-family: monospace; }
+        .copy-btn { background: var(--accent-red); border: none; color: white; padding: 0 18px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- LAYER 1: GATEWAY WELCOME SCREEN -->
+    <div id="welcome-layer" class="intro-layer">
+        <div class="intro-card">
+            <h1>Welcome to<br><span>IKIYGASIMA STORE</span></h1>
+            <p>Penyedia layanan pengembangan game Roblox Studio andal, aset digital 3D berkualitas tinggi, serta optimasi SMM panel terpercaya.</p>
+            <button class="store-btn" onclick="goToRegister()">Lanjut <span class="icon-plus" style="transform:rotate(45deg); width:8px; height:8px;"></span></button>
+        </div>
+    </div>
+
+    <!-- LAYER 2: REGISTRATION GATE -->
+    <div id="register-layer" class="intro-layer" style="display: none;">
+        <div class="intro-card">
+            <h1>Registrasi Pembeli</h1>
+            <p>Silakan isi nama panggilan atau nickname Anda untuk disinkronisasikan otomatis pada sistem pemesanan.</p>
+            <div class="input-wrapper">
+                <input type="text" id="username-input" placeholder="Masukkan nama Anda di sini..." autocomplete="off">
+            </div>
+            <button class="store-btn" onclick="goToLoading()">Simpan & Lanjut</button>
+        </div>
+    </div>
+
+    <!-- LAYER 3: VIDEO LOADING ENGINE -->
+    <div id="video-loading-layer" class="intro-layer" style="display: none; padding: 0;">
+        <video id="loading-video" src="loading.mp4" playsinline muted></video>
+    </div>
+    <!-- LAYER 4: MAIN DASHBOARD APP SYSTEM -->
+    <div id="main-app" class="app-container">
+        
+        <header>
+            <div class="header-title">IKIYGASIMA <span>STORE</span></div>
+            <button class="menu-toggle-btn" onclick="toggleSidebarView(true)"><span class="icon-bars"></span></button>
+        </header>
+
+        <!-- Profile Header Component -->
+        <div class="profile-container">
+            <video class="profile-bg-video" src="rt.mp4" autoplay loop muted playsinline></video>
+            <div class="profile-overlay"></div>
+            <img class="profile-avatar" src="PFP.jpeg" alt="Owner Avatar">
+            <div class="profile-username" id="client-name-display">Halo, Pelanggan</div>
+            
+            <!-- AUTO TYPING TEXT DESC COMPONENT -->
+            <div class="profile-typing-desc">
+                <span id="typing-text-target"></span><span class="typing-cursor"></span>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="changeAppTab('menu-tab', this)">Menu Store</button>
+            <button class="tab-btn" onclick="changeAppTab('progress-tab', this)">Progres Kerja</button>
+            <button class="tab-btn" onclick="changeAppTab('history-tab', this)">Riwayat Done</button>
+        </div>
+
+        <!-- Main Workspace Container -->
+        <div class="content-wrapper">
+            
+            <!-- TAB PANEL 1: CATALOGUE SHOP -->
+            <div id="menu-tab" class="tab-panel active">
+                
+                <div class="instruction-box">
+                    <h3 style="margin-bottom: 12px; font-size: 1.1rem; text-transform: uppercase; color: var(--accent-red);">Panduan Belanja & Alur Order</h3>
+                    <ol>
+                        <li>Tentukan layanan premium pilihan Anda dari galeri etalase di bawah ini.</li>
+                        <li>Gunakan kontrol kuantitas (+/-) jika ingin memesan item dalam jumlah banyak sekaligus.</li>
+                        <li>Klik tombol "Pesan", lalu lengkapi form instruksi penugasan, jalur akses, serta opsi antrean fastrack.</li>
+                        <li>Sistem otomatis merestrukturisasi total nota pengiriman Anda untuk divalidasi langsung oleh WhatsApp Owner.</li>
+                        <li>Gunakan menu log "Progres Kerja" untuk memantau status perkembangan pesanan Anda kapan saja.</li>
+                    </ol>
+                </div>
+
+                <!-- CATEGORY 1: ROBLOX DEVELOPMENT -->
+                <div class="section-title">Roblox World & Special Service</div>
+                <div class="showcase-grid">
+                    <div class="product-card">
+                        <div>
+                            <h3>Mount 5 CP</h3>
+                            <p class="product-desc">Pembuatan map pegunungan sinematik eksklusif dengan kelengkapan hingga 25 checkpoint balapan terstruktur tanpa kendala bug lag.</p>
+                            <div class="product-price">Rp 250.000</div>
+                        </div>
+                        <div>
+                            <div class="quantity-control">
+                                <button class="qty-btn" onclick="modifyCounterQty('mount-qty-val', -1)"><span class="icon-minus"></span></button>
+                                <span class="qty-number" id="mount-qty-val">1</span>
+                                <button class="qty-btn" onclick="modifyCounterQty('mount-qty-val', 1)"><span class="icon-plus"></span></button>
+                            </div>
+                            <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Mount 5 CP', 250000, true)">Pesan</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div>
+                            <h3>Club Mewah Star</h3>
+                            <p class="product-desc">Pembangunan interior club malam berkelas ultra premium bergaya cyberpunk modern dengan penataan lighting neon megah.</p>
+                            <div class="product-price">Rp 300.000</div>
+                        </div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Club Mewah Star', 300000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <div>
+                            <h3>Hangout Star</h3>
+                            <p class="product-desc">Desain map tempat nongkrong komunal interaktif, estetik, dan santai, dioptimalkan sepenuhnya agar ringan untuk player mobile.</p>
+                            <div class="product-price">Rp 300.000</div>
+                        </div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Hangout Star', 300000, false)">Pesan</button>
+                    </div>
+                </div>
+
+                <div class="menu-divider"></div>
+
+                <!-- CATEGORY 2: DEV FIXES -->
+                <div class="section-title">Development Asset & Code Fixes</div>
+                <div class="showcase-grid">
+                    <div class="product-card">
+                        <h3>Buat Model 3D</h3>
+                        <p class="product-desc">Pemodelan objek 3D custom (meshes/props) berkualitas tinggi khusus untuk kebutuhan environment game Roblox Anda.</p>
+                        <div class="product-price">Rp 35.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Buat Model 3D', 35000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>Buat Sistem Skrip</h3>
+                        <p class="product-desc">Penulisan baris kode pemrograman Lua tingkat lanjut yang bersih, fungsional, modular, dan bebas dari eksploitasi celah keamanan.</p>
+                        <div class="product-price">Rp 20.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Buat Sistem Skrip', 20000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>Fix Bug Tampilan Langit</h3>
+                        <p class="product-desc">Perbaikan glitch visual pencahayaan, siklus siang-malam, rendering skybox, dan atmosfer lingkungan game agar kembali jernih.</p>
+                        <div class="product-price">Rp 10.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Fix Bug Tampilan Langit', 10000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>Fix Backdoor</h3>
+                        <p class="product-desc">Pembersihan skrip terinfeksi virus, pencarian model berbahaya, serta penutupan celah skrip ilegal yang merusak server map.</p>
+                        <div class="product-price">Rp 10.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Fix Backdoor', 10000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>Pasang Summit Kit</h3>
+                        <p class="product-desc">Integrasi paket modul fungsional pendukung game balapan atau pendakian gunung agar sistem bekerja sinkron dan dinamis.</p>
+                        <div class="product-price">Rp 15.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Pasang Summit Kit', 15000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>Buat Aset ID</h3>
+                        <p class="product-desc">Penerbitan, manajemen penamaan, serta pembuatan ID aset resmi untuk pakaian, decal, gamepass, maupun lencana pencapaian.</p>
+                        <div class="product-price">Rp 10.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Buat Aset ID', 10000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>Buat Sound</h3>
+                        <p class="product-desc">Penyusunan efek suara (SFX) atau latar musik atmosferik custom berdurasi pendek yang jernih bebas klaim hak cipta.</p>
+                        <div class="product-price">Rp 5.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('Buat Sound', 5000, false)">Pesan</button>
+                    </div>
+                </div>
+
+                <div class="menu-divider"></div>
+
+                <!-- CATEGORY 3: SMM -->
+                <div class="section-title">Instagram Social Marketing Panel</div>
+                <div class="showcase-grid">
+                    <div class="product-card">
+                        <h3>100 Instagram Followers</h3>
+                        <p class="product-desc">Injeksi data pengikut profil Instagram berkualitas tinggi untuk meningkatkan kredibilitas impresi akun bisnis/pribadi.</p>
+                        <div class="product-price">Rp 10.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('100 IG Followers', 10000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>500 Instagram Followers</h3>
+                        <p class="product-desc">Optimasi penambahan 500 pengikut akun Instagram instan dengan proses pengerjaan aman tanpa membutuhkan password.</p>
+                        <div class="product-price">Rp 30.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('500 IG Followers', 30000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>1000 Instagram Followers</h3>
+                        <p class="product-desc">Paket branding 1.000 followers tertarget guna mendongkrak popularitas algoritma pencarian akun secara natural.</p>
+                        <div class="product-price">Rp 70.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('1000 IG Followers', 70000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>1000 Instagram Views</h3>
+                        <p class="product-desc">Penambahan metrik 1.000 jumlah tayangan pada video Reels atau Feeds untuk memperluas jangkauan FYP konten.</p>
+                        <div class="product-price">Rp 20.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('1000 IG Views', 20000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>1 Juta Instagram Views</h3>
+                        <p class="product-desc">Paket mega optimasi 1M views untuk mendongkrak popularitas konten video Anda secara masif dalam sekejap.</p>
+                        <div class="product-price">Rp 100.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('1 Juta IG Views', 100000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>500 Instagram Likes</h3>
+                        <p class="product-desc">Meningkatkan interaksi postingan dengan suntikan 500 penyuka pada foto atau video pilihan Anda secara cepat.</p>
+                        <div class="product-price">Rp 15.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('500 IG Likes', 15000, false)">Pesan</button>
+                    </div>
+                    <div class="product-card">
+                        <h3>1000 Instagram Likes</h3>
+                        <p class="product-desc">Dorong interaksi maksimal kiriman Anda lewat 1.000 likes nyata demi memperkuat reputasi postingan di linimasa.</p>
+                        <div class="product-price">Rp 30.000</div>
+                        <button class="store-btn" style="width:100%" onclick="triggerOrderModal('1000 IG Likes', 30000, false)">Pesan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB PANEL 2: TRACKING SYSTEM -->
+            <div id="progress-tab" class="tab-panel">
+                <div class="section-title">Pesanan Aktif Sedang Diproses</div>
+                <div id="progress-list-dom">
+                    <p style="color: #555; text-align: center; padding: 30px;">Belum ada antrean pengerjaan proyek saat ini.</p>
+                </div>
+            </div>
+
+            <!-- TAB PANEL 3: HISTORY DONE -->
+            <div id="history-tab" class="tab-panel">
+                <div class="section-title">Log Transaksi Sukses / Selesai</div>
+                <div id="history-list-dom">
+                    <p style="color: #555; text-align: center; padding: 30px;">Belum ada rekam riwayat transaksi tersimpan.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- --- LAYER 5: SIDEBAR COMPONENT LAYOUT (BACKGROUND.JPEG GRANTED) --- -->
+    <div id="sidebar-overlay-gate" class="sidebar-overlay" onclick="toggleSidebarView(false)"></div>
+    <div id="sidebar-drawer" class="sidebar">
+        <div class="sidebar-header">
+            <h3 style="letter-spacing: 1px; font-size: 1.1rem; font-weight: 800;">OWNER DASHBOARD</h3>
+            <button class="menu-toggle-btn" onclick="toggleSidebarView(false)"><span class="icon-close"></span></button>
+        </div>
+        <div class="sidebar-menu">
+            <div class="sidebar-item" onclick="handleSidebarAction('tiktok')">📱 TikTok Profile</div>
+            <div class="sidebar-item" onclick="handleSidebarAction('testi')">📢 Saluran Testimoni</div>
+            <div class="sidebar-item" onclick="handleSidebarAction('discord')">💬 Server Discord</div>
+            <div class="sidebar-item" onclick="handleSidebarAction('kendala')">⚠️ Laporkan Kendala</div>
+            <div class="sidebar-item" onclick="handleSidebarAction('penipuan')">🛡️ Lapor Store Penipu</div>
+            <div class="sidebar-item" onclick="handleSidebarAction('balasdendam')">💀 Misi Balas Dendam</div>
+        </div>
+        <div class="sidebar-watermark">BY IKIYGASIMA</div>
+    </div>
+    <div id="billing-modal" class="modal-layer">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeAppModal('billing-modal')"><span class="icon-close"></span></button>
+            <h2 id="billing-title">Form Validasi Order</h2>
+            
+            <label class="form-label">Nama Pelanggan Resmi</label>
+            <input type="text" id="billing-client-input" class="form-select" readonly>
+
+            <label class="form-label">Spesifikasi Pengerjaan Lengkap</label>
+            <textarea id="billing-spec-input" class="form-textarea" rows="4" placeholder="Tulis instruksi pengerjaan secara detail dan jelas..."></textarea>
+
+            <label class="form-label">Metode Sistem Pengerjaan</label>
+            <select id="billing-method-input" class="form-select">
+                <option value="Via Login">Via Login (Serahkan Data Akses)</option>
+                <option value="Via Share">Via Share (Melalui Team/File)</option>
+                <option value="SMM / Pengiriman Langsung">SMM / Pengiriman Target Tautan</option>
+            </select>
+
+            <label class="form-label">Kode Kupon Diskon</label>
+            <input type="text" id="billing-coupon-input" class="form-select" placeholder="Masukkan kode promo jika ada...">
+
+            <label class="checkbox-option">
+                <input type="checkbox" id="billing-fastrack-input" onchange="updateLiveModalTotal()">
+                <div>
+                    <span style="font-weight: 800; display: block; font-size: 0.9rem;">Aktifkan Jalur Fastrack (+Rp 30.000)</span>
+                    <span style="font-size: 0.78rem; color:#777;">Lewati semua antrean pesanan, proyek dikerjakan saat ini juga.</span>
+                </div>
+            </label>
+
+            <div style="margin: 22px 0; padding: 16px; background: #080808; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #1f1f1f;">
+                <span style="font-weight: 800; font-size: 0.85rem; text-transform: uppercase;">Total Pembayaran:</span>
+                <span id="billing-total-render" style="color: var(--accent-red); font-size: 1.4rem; font-weight: 900;">Rp 0</span>
+            </div>
+
+            <button class="store-btn" style="width: 100%;" onclick="executeOrderCheckout()">Kirim Formulir ke WhatsApp</button>
+        </div>
+    </div>
+
+    <div id="dynamic-action-modal" class="modal-layer">
+        <div class="modal-box" id="dynamic-modal-root">
+            </div>
+    </div>
+
+    <script>
+        let clientProfileName = "";
+        let currentTransactionData = {};
+        const DEVELOPER_WA_NUMBER = "6287812445345";
+
+        // In-Memory Database State
+        let queueOrdersArray = [];
+        let doneOrdersArray = [];
+
+        // TEXT TYPING CONFIGURATION
+        const typingTextPhrases = [
+            "Professional Roblox Studio Developer.",
+            "Spesialis Pembuat Sistem Skrip & Map Eksklusif.",
+            "Layanan SMM Panel Cepat, Aman, & Terpercaya.",
+            "Solusi Desain UI/UX & Pemodelan Aset 3D Roblox."
+        ];
+        let phraseIdx = 0;
+        let characterIdx = 0;
+        let isDeletingText = false;
+        let typingSpeedDuration = 100;
+
+        function runTextTypingEngine() {
+            const currentPhrase = typingTextPhrases[phraseIdx];
+            const textTarget = document.getElementById("typing-text-target");
+            
+            if (!textTarget) return;
+
+            if (isDeletingText) {
+                textTarget.textContent = currentPhrase.substring(0, characterIdx - 1);
+                characterIdx--;
+                typingSpeedDuration = 40;
+            } else {
+                textTarget.textContent = currentPhrase.substring(0, characterIdx + 1);
+                characterIdx++;
+                typingSpeedDuration = 80;
+            }
+
+            if (!isDeletingText && characterIdx === currentPhrase.length) {
+                typingSpeedDuration = 2200; 
+                isDeletingText = true;
+            } else if (isDeletingText && characterIdx === 0) {
+                isDeletingText = false;
+                phraseIdx = (phraseIdx + 1) % typingTextPhrases.length;
+                typingSpeedDuration = 400; 
+            }
+
+            setTimeout(runTextTypingEngine, typingSpeedDuration);
+        }
+
+        function modifyCounterQty(elementId, delta) {
+            let node = document.getElementById(elementId);
+            let value = parseInt(node.innerText) + delta;
+            if (value < 1) value = 1;
+            node.innerText = value;
+        }
+        // --- JAVASCRIPT SYSTEM ENGINE PART 2 ---
+        function goToRegister() {
+            document.getElementById('welcome-layer').style.display = 'none';
+            document.getElementById('register-layer').style.display = 'flex';
+        }
+
+        function goToLoading() {
+            let inputName = document.getElementById('username-input').value.trim();
+            if (inputName === "") {
+                alert("Peringatan: Kolom Nama wajib diisi untuk keamanan transaksi!");
+                return;
+            }
+            clientProfileName = inputName;
+            document.getElementById('client-name-display').innerText = "Halo, " + clientProfileName;
+            document.getElementById('billing-client-input').value = clientProfileName;
+
+            document.getElementById('register-layer').style.display = 'none';
+            
+            let loadLayer = document.getElementById('video-loading-layer');
+            let loadVideo = document.getElementById('loading-video');
+            
+            loadLayer.style.display = 'flex';
+            loadVideo.play().catch(() => {
+                terminateLoadingSequence();
+            });
+
+            loadVideo.onended = function() {
+                terminateLoadingSequence();
+            };
+        }
+
+        function terminateLoadingSequence() {
+            document.getElementById('video-loading-layer').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            runTextTypingEngine();
+            alert("Sistem Siap! Selamat datang di IKIYGASIMA STORE, " + clientProfileName + ".");
+        }
+
+        function toggleSidebarView(show) {
+            let sidebar = document.getElementById('sidebar-drawer');
+            let overlay = document.getElementById('sidebar-overlay-gate');
+            if (show) {
+                sidebar.classList.add('open');
+                overlay.style.display = 'block';
+            } else {
+                sidebar.classList.remove('open');
+                overlay.style.display = 'none';
+            }
+        }
+
+        function changeAppTab(targetPanelId, triggerButton) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(targetPanelId).classList.add('active');
+            triggerButton.classList.add('active');
+        }
+
+        function triggerOrderModal(name, basePrice, usesQty) {
+            let quantity = 1;
+            if (usesQty) {
+                quantity = parseInt(document.getElementById('mount-qty-val').innerText);
+            }
+
+            currentTransactionData = {
+                productName: name,
+                basePrice: basePrice,
+                qty: quantity,
+                subtotal: basePrice * quantity
+            };
+
+            document.getElementById('billing-title').innerText = name + ` [x${quantity}]`;
+            document.getElementById('billing-spec-input').value = "";
+            document.getElementById('billing-coupon-input').value = "";
+            document.getElementById('billing-fastrack-input').checked = false;
+            
+            updateLiveModalTotal();
+            document.getElementById('billing-modal').style.display = 'flex';
+        }
+
+        function updateLiveModalTotal() {
+            let totalCost = currentTransactionData.subtotal;
+            if (document.getElementById('billing-fastrack-input').checked) {
+                totalCost += 30000;
+            }
+            document.getElementById('billing-total-render').innerText = "Rp " + totalCost.toLocaleString('id-ID');
+        }
+
+        function closeAppModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function executeOrderCheckout() {
+            let specText = document.getElementById('billing-spec-input').value.trim();
+            let processMethod = document.getElementById('billing-method-input').value;
+            let couponText = document.getElementById('billing-coupon-input').value.trim();
+            let isFastrack = document.getElementById('billing-fastrack-input').checked;
+            
+            if (specText === "") {
+                alert("Kesalahan: Kolom spesifikasi detail penugasan tidak boleh kosong!");
+                return;
+            }
+
+            let absolutePrice = currentTransactionData.subtotal + (isFastrack ? 30000 : 0);
+            
+            let jobObject = {
+                uid: "IGS-TASK-" + Date.now().toString().slice(-4),
+                title: currentTransactionData.productName,
+                amount: currentTransactionData.qty,
+                price: absolutePrice,
+                specification: specText,
+                method: processMethod,
+                fastrackState: isFastrack ? "Ya (Prioritas Utama)" : "Tidak",
+                couponCode: couponText ? couponText : "Tidak Ada",
+                status: "pending",
+                ownerNote: "Menunggu konfirmasi pembayaran oleh owner"
+            };
+
+            queueOrdersArray.push(jobObject);
+            refreshProgressDom();
+            closeAppModal('billing-modal');
+
+            // EMOTICON APPLIED EXCLUSIVELY FOR WHATSAPP TRANSMISSION TEXT
+            let waFormattedText = `⚡ *PESANAN BARU | IKIYGASIMA STORE* ⚡\n\n` +
+                                  `📝 *ID Transaksi:* ${jobObject.uid}\n` +
+                                  `👤 *Nama Pembeli:* ${clientProfileName}\n` +
+                                  `📦 *Layanan:* ${jobObject.title} (x${jobObject.amount})\n` +
+                                  `⚙️ *Spesifikasi Proyek:* ${jobObject.specification}\n` +
+                                  `🛣️ *Metode Akses:* ${jobObject.method}\n` +
+                                  `🚀 *Jalur Fastrack:* ${jobObject.fastrackState}\n` +
+                                  `🎟️ *Kode Redeem:* ${jobObject.couponCode}\n` +
+                                  `💰 *Total Tagihan:* Rp ${jobObject.price.toLocaleString('id-ID')}\n\n` +
+                                  `Halo Owner Ikiy, mohon segera dicek dan diproses ya! Terima kasih banyak. 🔥`;
+
+            window.open(`https://wa.me/${DEVELOPER_WA_NUMBER}?text=${encodeURIComponent(waFormattedText)}`, '_blank');
+        }
+        // --- JAVASCRIPT SYSTEM ENGINE PART 3 ---
+        function refreshProgressDom() {
+            let rootNode = document.getElementById('progress-list-dom');
+            if (queueOrdersArray.length === 0) {
+                rootNode.innerHTML = `<p style="color: #555; text-align: center; padding: 30px;">Belum ada antrean pengerjaan proyek saat ini.</p>`;
+                return;
+            }
+
+            rootNode.innerHTML = "";
+            queueOrdersArray.forEach((item, index) => {
+                let badgeStyle = item.status === 'pending' ? 'status-pending' : 'status-process';
+                let stateText = item.status === 'pending' ? 'Pending (Antrean)' : 'Sedang Dikerjakan';
+
+                rootNode.innerHTML += `
+                    <div class="data-card">
+                        <h4 style="color:var(--accent-red); font-size:1.1rem; text-transform:uppercase;">${item.title} (x${item.amount})</h4>
+                        <div style="font-size:0.85rem; color:var(--muted-gray); margin: 6px 0 10px 0; line-height:1.5;">
+                            <p>UID Proyek: <b>${item.uid}</b></p>
+                            <p>Sistem Kerja: ${item.method} | Jalur Cepat: ${item.fastrackState}</p>
+                            <p>Biaya: Rp ${item.price.toLocaleString('id-ID')}</p>
+                            <p style="color:white; margin-top:6px;">Status Kerja: <span style="color:#ffcc00; font-weight:bold;">"${item.ownerNote}"</span></p>
+                        </div>
+                        <div><span class="status-badge ${badgeStyle}">${stateText}</span></div>
+                        <button class="note-btn" onclick="openStateModifierPanel(${index})">Ubah Status / Beri Note</button>
+                    </div>
+                `;
+            });
+        }
+
+        function openStateModifierPanel(index) {
+            let item = queueOrdersArray[index];
+            let rootModal = document.getElementById('dynamic-modal-root');
+            
+            rootModal.innerHTML = `
+                <button class="modal-close" onclick="closeAppModal('dynamic-action-modal')"><span class="icon-close"></span></button>
+                <h2>Manajemen Status Proyek</h2>
+                <p style="font-size:0.85rem; margin-bottom:18px; color:var(--muted-gray);">Otoritas internal owner untuk memperbarui visual tracking pengerjaan ID ${item.uid}</p>
+                
+                <label class="form-label">Ubah Tahapan Kerja</label>
+                <select id="state-select-node" class="form-select">
+                    <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>Tetap Pending</option>
+                    <option value="process" ${item.status === 'process' ? 'selected' : ''}>Ubah ke Sedang Dikerjakan</option>
+                    <option value="done">Selesai Total (Pindahkan ke Riwayat)</option>
+                </select>
+
+                <label class="form-label">Catatan Pembaruan (Note)</label>
+                <input type="text" id="state-note-node" class="form-select" value="${item.ownerNote}">
+
+                <button class="store-btn" style="width:100%; margin-top:6px;" onclick="saveStateModification(${index})">Simpan Perubahan</button>
+            `;
+            document.getElementById('dynamic-action-modal').style.display = 'flex';
+        }
+
+        function saveStateModification(index) {
+            let selectedStatus = document.getElementById('state-select-node').value;
+            let writtenNote = document.getElementById('state-note-node').value.trim();
+            
+            if (selectedStatus === 'done') {
+                let shiftItem = queueOrdersArray.splice(index, 1)[0];
+                shiftItem.status = 'done';
+                shiftItem.ownerNote = writtenNote ? writtenNote : "Proyek selesai dikerjakan secara sempurna.";
+                doneOrdersArray.push(shiftItem);
+                refreshHistoryDom();
+            } else {
+                queueOrdersArray[index].status = selectedStatus;
+                queueOrdersArray[index].ownerNote = writtenNote ? writtenNote : "Pembaruan sistem berkala.";
+            }
+            
+            refreshProgressDom();
+            closeAppModal('dynamic-action-modal');
+        }
+
+        function refreshHistoryDom() {
+            let rootNode = document.getElementById('history-list-dom');
+            if (doneOrdersArray.length === 0) {
+                rootNode.innerHTML = `<p style="color: #555; text-align: center; padding: 30px;">Belum ada rekam riwayat transaksi tersimpan.</p>`;
+                return;
+            }
+
+            rootNode.innerHTML = "";
+            doneOrdersArray.forEach(item => {
+                rootNode.innerHTML += `
+                    <div class="data-card" style="border-color: #27ae60;">
+                        <h4 style="color:#27ae60; font-size:1.1rem; text-transform:uppercase;">✔ ${item.title} (x${item.amount})</h4>
+                        <div style="font-size:0.85rem; color:var(--muted-gray); margin-top:6px; line-height:1.4;">
+                            <p>ID Transaksi: <b>${item.uid}</b> | Pembeli: ${clientProfileName}</p>
+                            <p>Total Biaya: Rp ${item.price.toLocaleString('id-ID')} [Status Pembayaran: LUNAS]</p>
+                            <p style="color:#888; font-style:italic; margin-top:4px;">Log Akhir: "${item.ownerNote}"</p>
+                        </div>
+                        <div><span class="status-badge status-done">Selesai Sempurna</span></div>
+                    </div>
+                `;
+            });
+        }
+
+        function handleSidebarAction(actionKey) {
+            toggleSidebarView(false);
+            let rootModal = document.getElementById('dynamic-modal-root');
+            rootModal.innerHTML = `<button class="modal-close" onclick="closeAppModal('dynamic-action-modal')"><span class="icon-close"></span></button>`;
+
+            if (actionKey === 'tiktok') {
+                window.open("https://www.tiktok.com/@ikiyxsd1", "_blank");
+                return;
+            } else if (actionKey === 'testi') {
+                window.open("https://whatsapp.com/channel/0029Vb7lJE91SWt1siiU4p34", "_blank");
+                return;
+            } else if (actionKey === 'discord') {
+                rootModal.innerHTML += `
+                    <h2>Salin ID Server Discord</h2>
+                    <p style="font-size:0.85rem; margin-bottom:16px; color:var(--muted-gray);">Klik tombol di bawah untuk menyalin ID server Discord resmi kami.</p>
+                    <div class="clipboard-box">
+                        <input type="text" id="discord-id-node" value="ikiyxsdd" readonly>
+                        <button class="copy-btn" onclick="executeTextCopy('discord-id-node')">Salin</button>
+                    </div>
+                `;
+            } else if (actionKey === 'kendala') {
+                rootModal.innerHTML += `
+                    <h2>Laporkan Kendala Sistem</h2>
+                    <label class="form-label">Deskripsi Kendala Pemesanan</label>
+                    <textarea id="report-issue-area" class="form-textarea" rows="4" placeholder="Tuliskan kendala teknis atau kendala transaksi yang sedang Anda hadapi..."></textarea>
+                    <button class="store-btn" style="width:100%;" onclick="submitExternalReport('kendala')">Kirim Laporan Masalah</button>
+                `;
+            } else if (actionKey === 'penipuan') {
+                rootModal.innerHTML += `
+                    <h2>Laporkan Tindakan Penipuan Store Lain</h2>
+                    <label class="form-label">Nama Store Yang Dilaporkan</label>
+                    <input type="text" id="report-scam-name" class="form-select" placeholder="Contoh: StorePenipu_ID">
+                    <label class="form-label">Kronologi Kejadian</label>
+                    <textarea id="report-scam-chronology" class="form-textarea" rows="4" placeholder="Jelaskan secara runtut rincian kejadian penipuan tersebut..."></textarea>
+                    <p style="font-size:0.75rem; color:var(--accent-red); margin-bottom:16px; font-weight:700;">*PERINGATAN: Anda wajib melampirkan bukti gambar/video transaksi secara manual saat dialihkan ke chat owner.</p>
+                    <button class="store-btn" style="width:100%;" onclick="submitExternalReport('penipuan')">Kirim Pengaduan</button>
+                `;
+            } else if (actionKey === 'balasdendam') {
+                rootModal.innerHTML += `
+                    <h2>Misi Pembalasan Target Khusus</h2>
+                    <label class="form-label">Nomor WhatsApp Target</label>
+                    <input type="text" id="target-phone-node" class="form-select" placeholder="Contoh: 0878xxxxxxxx">
+                    <label class="form-label">Isi Pesan Serangan</label>
+                    <textarea id="target-message-node" class="form-textarea" rows="2" placeholder="Tulis teks serangan Anda..."></textarea>
+                    <label class="form-label">Alasan Kebencian</label>
+                    <textarea id="target-reason-node" class="form-textarea" rows="3" placeholder="Berikan alasan dasar mengapa Anda menargetkan nomor ini..."></textarea>
+                    <button class="store-btn" style="width:100%;" onclick="submitExternalReport('balasdendam')">Eksekusi Misi via WhatsApp</button>
+                `;
+            }
+            
+            document.getElementById('dynamic-action-modal').style.display = 'flex';
+        }
+
+        function executeTextCopy(id) {
+            let targetInput = document.getElementById(id);
+            targetInput.select();
+            targetInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(targetInput.value);
+            alert("Berhasil disalin ke clipboard: " + targetInput.value);
+        }
+
+        function submitExternalReport(type) {
+            let finalPayloadText = "";
+            if (type === 'kendala') {
+                let issueInput = document.getElementById('report-issue-area').value.trim();
+                if (!issueInput) return alert("Kesalahan: Formulir laporan wajib diisi!");
+                finalPayloadText = `🚨 *PENGADUAN KENDALA PEMESANAN - CLIENT REPORT* 🚨\n\n• Pengirim Laporan: ${clientProfileName}\n• Detail Kendala: ${issueInput}`;
+            } else if (type === 'penipuan') {
+                let storeName = document.getElementById('report-scam-name').value.trim();
+                let chronology = document.getElementById('report-scam-chronology').value.trim();
+                if (!storeName || !chronology) return alert("Kesalahan: Semua kolom laporan wajib Anda lengkapi!");
+                finalPayloadText = `🛡️ *LAPORAN TINDAKAN PENIPUAN STORE LAIN* 🛡️\n\n• Nama Pelapor: ${clientProfileName}\n• Nama Toko Penipu: ${storeName}\n• Kronologi Kasus: ${chronology}\n\n_(Bukti lampiran tangkapan layar/video dikirimkan manual pada obrolan ini)_`;
+            } else if (type === 'balasdendam') {
+                let targetPhone = document.getElementById('target-phone-node').value.trim();
+                let attackMsg = document.getElementById('target-message-node').value.trim();
+                let hateReason = document.getElementById('target-reason-node').value.trim();
+                if (!targetPhone || !attackMsg || !hateReason) return alert("Kesalahan: Seluruh parameter instruksi misi wajib dipenuhi!");
+                finalPayloadText = `💀 *MISI PEMBALASAN TARGET - EXECUTION COMMAND* 💀\n\n• Pemesan Misi: ${clientProfileName}\n• No WhatsApp Target: ${targetPhone}\n• Isi Pesan Serangan: ${attackMsg}\n• Alasan Kebencian: ${hateReason}`;
+            }
+
+            window.open(`https://wa.me/${DEVELOPER_WA_NUMBER}?text=${encodeURIComponent(finalPayloadText)}`, '_blank');
+            closeAppModal('dynamic-action-modal');
+        }
+    </script>
+</body>
+</html>
